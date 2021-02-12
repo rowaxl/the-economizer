@@ -22,7 +22,7 @@ const DashboardPage = () => {
     if (!plans.plans) return
 
     return plans.plans.sort((a, b) => new Date(a.date) < new Date(b.date) ? 1 : -1 ).map(plan => {
-      const [diff, percentage] = calcPercentage(plan.records)
+      const [diff] = calcPercentage(plan.records)
 
       return (
         <div
@@ -32,7 +32,6 @@ const DashboardPage = () => {
           <PlanCard
             id={plan.id}
             date={new Date(plan.date)}
-            percentage={percentage}
             diff={diff}
           />
         </div>

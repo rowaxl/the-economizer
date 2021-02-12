@@ -21,7 +21,7 @@ export const calcPercentage = (records: IRecord[]) => {
   const incomeAmount = incomes.reduce((a, c) => a + c.amount, 0)
 
   const diff = incomeAmount + expenceAmount
-  const percentage = isNaN(diff / (incomeAmount - expenceAmount)) ? 0 : diff / (incomeAmount - expenceAmount)
+  // const percentage = isNaN(diff / (incomeAmount - expenceAmount)) ? 0 : diff / (incomeAmount - expenceAmount)
 
-  return [diff, percentage]
+  return [diff]
 }

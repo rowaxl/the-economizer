@@ -6,28 +6,25 @@ import Button from './Button'
 interface IProps {
   id: string
   title?: string
-  percentage: number
+  // percentage: number
   diff: number
   date: Date
 }
 
 const MILISEC_A_DAY = 1000 * 60 * 60 * 24
 
-const PlanCard = ({ id, title, percentage, diff, date }: IProps) => {
+const PlanCard = ({ id, title, diff, date }: IProps) => {
   const router = useRouter()
   const currentMoment = moment(date).add(1, 'month').subtract(1, 'day')
 
-  const renderPercentage = () => {
+  const renderLeftOver = () => {
     return (
       <h5 className={
-        percentage > 0 ?
+        diff >= 0 ?
           'tw-w-full tw-text-xl tw-text-center tw-text-blue-600 dark:tw-text-blue-400' :
           'tw-w-full tw-text-xl tw-text-center tw-text-red-600 dark:tw-text-red-400'
       }>
-        {percentage > 0 ? '+' : '' }
-        {percentage.toFixed(1)}
-        %
-        ($ {diff})
+        { diff >= 0 ? `$${diff}` : `-$ ${-diff}`}
       </h5>
     )
   }
@@ -69,7 +66,7 @@ const PlanCard = ({ id, title, percentage, diff, date }: IProps) => {
       </div>
 
       <div className='tw-flex tw-flex-row tw-my-4'>
-        {renderPercentage()}
+        {renderLeftOver()}
       </div>
 
       <div className='tw-flex tw-flex-row tw-my-4'>

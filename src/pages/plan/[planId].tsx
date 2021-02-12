@@ -19,7 +19,7 @@ const PlanDetail = () => {
   const expences = planDetail.records.filter(r => r.amount < 0)
   const incomes = planDetail.records.filter(r => r.amount > 0)
 
-  const [diff, percentage] = calcPercentage(planDetail.records)
+  const [diff] = calcPercentage(planDetail.records)
 
   useEffect(() => {
     dispatch(updateLocation({ path: '/plan', title: 'Plan of ' + planDetail.date }))
@@ -59,7 +59,7 @@ const PlanDetail = () => {
 
       <div className="tw-flex tw-flex-row tw-border-t tw-border-gray-100 tw-py-4">
         <p className="dark:tw-text-white tw-mt-8">
-          Left Over: ${diff} ({percentage.toFixed(2)} %)
+          Left Over: {diff > 0 ? `$${diff}` : `-$${-diff}`}
         </p>
       </div>
     </div>

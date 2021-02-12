@@ -1,37 +1,24 @@
 import React, { ReactNode } from 'react'
-import Link from 'next/link'
+import Header from './Header'
 import Footer from './Footer'
+import { Tw } from '../tw'
 
 type Props = {
   children?: ReactNode
-  title?: string
 }
 
-const Layout = ({ children }: Props) => (
-  <div className="flex flex-col h-screen">
-    <header>
-      <nav>
-        <Link href="/">
-          <a>Home</a>
-        </Link>{' '}
-        |{' '}
-        <Link href="/about">
-          <a>About</a>
-        </Link>{' '}
-        |{' '}
-        <Link href="/users">
-          <a>Users List</a>
-        </Link>{' '}
-        | <a href="/api/users">Users API</a>
-      </nav>
-    </header>
+const Layout = ({ children }: Props) => {
+  return (
+    <div className={Tw().flexColumn().screenHeight().screenWidth().bgColor('gray-300').bgColor('gray-800', 'dark').$()}>
+      <Header />
 
-    <main className="flex-1 overflow-scroll">
-      {children}
-    </main>
+      <main className={Tw().screenWidth().flex('1').px(8).mx('auto').overflowScroll().$()}>
+        {children}
+      </main>
 
-    <Footer />
-  </div>
-)
+      <Footer />
+    </div>
+  )
+}
 
 export default Layout

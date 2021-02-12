@@ -28,6 +28,7 @@ const PlanCard = ({ id, title, percentage, diff, date }: IProps) => {
         {percentage > 0 ? '+' : '' }
         {percentage.toFixed(1)}
         %
+        ($ {diff})
       </h5>
     )
   }

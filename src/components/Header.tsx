@@ -5,7 +5,7 @@ import { Tw } from "../tw"
 
 const Header = () => {
   const router = useRouter()
-  const { title } = useSelector((state: ICombinedStates) => state.location)
+  const { location, auth } = useSelector((state: ICombinedStates) => state)
 
   return (
     router.pathname === '/' ?
@@ -16,9 +16,11 @@ const Header = () => {
         .bgColor('gray-light').bgColor('gray-dark', 'dark')
         .border('b').borderColor('gray-dark').borderColor('gray-mid', 'dark')
         .py(4).px(4)
+        .flex().justify('between')
         .$()}>
+        {location.title}
 
-        {title}
+        {auth.user && auth.user.name}
       </header>
   );
 }

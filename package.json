@@ -24,7 +24,8 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "swr": "^0.4.2",
-    "tailwindcss": "^2.0.3"
+    "tailwindcss": "^2.0.3",
+    "ulid": "^2.3.0"
   },
   "devDependencies": {
     "@types/isomorphic-fetch": "^0.0.35",

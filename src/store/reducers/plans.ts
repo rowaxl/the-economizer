@@ -1,7 +1,7 @@
 import { AnyAction } from "redux"
 import { IUser } from "./auth"
 
-import { fetchPlans } from '../../api/plan'
+import { fetchPlans, postPlan } from '../../api/plan'
 
 export const FETCH_PLANS = 'FETCH_PLANS'
 
@@ -33,6 +33,16 @@ export const fetchPlansAction = (user: IUser) => async (dispatch: DispatchType<I
   if (!user.token) return dispatch({ type: '' })
 
   const plans:IPlan[] = await fetchPlans(user.token)
+
+  return dispatch({ type: FETCH_PLANS, payload: plans })
+}
+
+export const addPlanAction = (user: IUser, plan: IPlan) => async (dispatch: DispatchType<IPlanAction>) => {
+  if (!user.token) return dispatch({ type: '' })
+
+  await postPlan(user.token, plan)
+
+  const plans: IPlan[] = await fetchPlans(user.token)
 
   return dispatch({ type: FETCH_PLANS, payload: plans })
 }

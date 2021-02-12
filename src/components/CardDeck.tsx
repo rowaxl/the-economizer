@@ -16,7 +16,7 @@ const CardDeck = ({ deckTitle, cards }: IDeckProps) => {
         </h4>
       }
 
-      <div className={Tw().width('full').flexRow().flex('wrap').justify('between').$()}>
+      <div className={Tw().width('full').flexRow().flex('wrap').justify('start').$()}>
         { cards && cards }
       </div>
     </div>

@@ -2,16 +2,15 @@ import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
 
-import Card from '../components/Card'
 import PlanCard from '../components/PlanCard'
 import CardDeck from '../components/CardDeck'
 import Modal from '../components/Modal'
-import { Tw } from '../tw'
 import { ICombinedStates } from '../store/reducers'
 
 import { calcPercentage } from '../utils'
 import { updateLocation } from '../store/reducers/location'
 import { fetchPlansAction, addPlanAction } from '../store/reducers/plans'
+import { ulid } from 'ulid'
 
 const DashboardPage = () => {
   const router = useRouter()
@@ -19,33 +18,41 @@ const DashboardPage = () => {
   const { plans, auth } = useSelector((state: ICombinedStates) => state)
   const [openModal, setOpenModal] = useState(false)
 
-  const latestPlans = () => 
-    plans.plans?.sort((a, b) => a.date < b.date ? 1 : -1).map(plan => {
+  const latestPlans = () => {
+    if (!plans.plans) return
+
+    return plans.plans.sort((a, b) => new Date(a.date) < new Date(b.date) ? 1 : -1 ).map(plan => {
       const [diff, percentage] = calcPercentage(plan.records)
 
       return (
-        <PlanCard
+        <div
           key={plan.id}
-          id={plan.id}
-          date={new Date(plan.date)}
-          percentage={percentage}
-          diff={diff}
-        />
+          className='tw-w-1/3'
+        >
+          <PlanCard
+            id={plan.id}
+            date={new Date(plan.date)}
+            percentage={percentage}
+            diff={diff}
+          />
+        </div>
     )})
+  }
+    
 
   useEffect(() => {
     dispatch(updateLocation({ path: '/dashboard', title: 'Dashboard' }))
   }, [])
 
   useEffect(() => {
-    if (!auth)
+    if (!auth.user)
       router.push('/')
   }, [auth])
 
   useEffect(() => {
     if (auth.user)
       dispatch(fetchPlansAction(auth.user))
-  }, [auth, plans])
+  }, [auth])
 
   const handleOpenModal = () => {
     setOpenModal(true)
@@ -56,29 +63,17 @@ const DashboardPage = () => {
   }
 
   const handleSubmit = (date: string) => {
+    if (!auth.user) return
 
+    dispatch(addPlanAction(auth.user, {
+      id: ulid(),
+      date,
+      records: []
+    }))
   }
 
   return (
     <div>
-      <div className={Tw().flexRow().my(8).minHeight('1/2').$()}>
-        <Card
-          title={'Exptends Category'}
-        >
-          {/* TODO: Circle Graph */}
-        </Card>
-        <Card
-          title={'Left Overs'}
-        >
-          {/* TODO: Horizontal Graph */}
-        </Card>
-        <Card
-          title={'Savings'}
-        >
-          {/* TODO: Line Graph */}
-        </Card>
-      </div>
-
       <CardDeck
         deckTitle="Latest Plans"
         cards={latestPlans()}

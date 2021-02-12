@@ -6,7 +6,6 @@ import { signIn, useSession } from 'next-auth/client'
 import { encodeUserToken } from '../utils'
 
 import Button from '../components/Button'
-import { Tw } from '../tw'
 
 const IndexPage = () => {
   const router = useRouter()
@@ -34,12 +33,12 @@ const IndexPage = () => {
   }
 
   return (
-    <div className={Tw().height('full').width('full').flexColumn().justify('center').$()}>
+    <div className='tw-h-full tw-w-full tw-flex tw-flex-col tw-justify-center'>
       <div className="tw-content tw-text-3xl tw-text-center md:tw-text-left">
         <h1 className="tw-text-5xl tw-text-blue-500 tw-font-bold">
           Economizer
         </h1>
-        <p className={Tw().textColor('black').textColor('white', 'dark').$()}>
+        <p className='tw-text-black dark:tw-text-white'>
           Manage, Visualize, Categorize your budgets and Economize it.
         </p>
       </div>

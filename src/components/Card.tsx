@@ -1,5 +1,4 @@
 import { ReactNode } from "react"
-import { Tw } from "../tw"
 
 interface IProps {
   title?: string,
@@ -8,15 +7,15 @@ interface IProps {
 
 const Card = ({ children, title }: IProps) => {
   return (
-    <div className={Tw().width('full').shadow('xl', 'hover').$()}>
+    <div className='tw-w-full hover:tw-shadow-xl'>
       {
         title &&
-        <h4 className={Tw().fontSize('2xl').textColor('black').textColor('white', 'dark').my(4).$()}>
+        <h4 className='tw-text-lg dark:tw-text-white tw-my-4'>
           {title}
         </h4>
       }
 
-      <div className={Tw().px(4).py(4).px(10, 'md').$()}>
+      <div className='tw-py-4 tw-px-4'>
         {children}
       </div>
     </div>

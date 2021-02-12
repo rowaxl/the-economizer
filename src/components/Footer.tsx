@@ -1,8 +1,6 @@
-import { Tw } from "../tw"
-
 const Footer = () => {
   return (
-    <footer className={Tw().flex().textColor('black').textColor('white', 'dark').border('t').borderColor('gray-200').py(4).px(4).$()}>
+    <footer className='tw-flex tw-text-black dark:tw-text-white tw-border-t tw-border-gray-200 tw-py-4 tw-px-4'>
       &copy; Roaxl0 2021
     </footer>
   )

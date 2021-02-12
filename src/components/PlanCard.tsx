@@ -1,6 +1,5 @@
 import moment from 'moment'
 import { useRouter } from 'next/router'
-import { Tw } from '../tw'
 import Card from './Card'
 import Button from './Button'
 
@@ -22,8 +21,8 @@ const PlanCard = ({ id, title, percentage, diff, date }: IProps) => {
     return (
       <h5 className={
         percentage > 0 ?
-          Tw().width('full').fontSize('xl').textAlign('center').textColor('blue-600').textColor('blue-400', 'dark').$() :
-          Tw().width('full').fontSize('xl').textAlign('center').textColor('red-600').textColor('red-400', 'dark').$()
+          'tw-w-full tw-text-xl tw-text-center tw-text-blue-600 dark:tw-text-blue-400' :
+          'tw-w-full tw-text-xl tw-text-center tw-text-red-600 dark:tw-text-red-400'
       }>
         {percentage > 0 ? '+' : '' }
         {percentage.toFixed(1)}
@@ -35,7 +34,7 @@ const PlanCard = ({ id, title, percentage, diff, date }: IProps) => {
 
   const renderDate = () => {
     return (
-      <h6 className={Tw().width('full').fontSize('2xl').textAlign('center').textColor('black').textColor('white', 'dark').$()}>
+      <h6 className='tw-w-full tw-text-2xl tw-text-center tw-text-black dark:tw-text-white'>
         {currentMoment.format('MMM YYYY')}
       </h6>
     )
@@ -46,12 +45,12 @@ const PlanCard = ({ id, title, percentage, diff, date }: IProps) => {
 
     if (today.unix() > currentMoment.unix()) {
       return (
-        <div className={Tw().my(3).$()}></div>
+        <div className='tw-my-3'></div>
       )
     }
 
     return (
-      <p className={Tw().width('full').fontSize('lg').textAlign('center').textColor('black').textColor('white', 'dark').$()}>
+      <p className='tw-w-full tw-text-lg tw-text-center dark:tw-text-white'>
         {`${(currentMoment.diff(today) / MILISEC_A_DAY).toFixed(0)} days left`}
       </p>
     )
@@ -65,15 +64,15 @@ const PlanCard = ({ id, title, percentage, diff, date }: IProps) => {
     <Card
       title={title}
     >
-      <div className={Tw().flexRow().width('full').my(4).$()}>
+      <div className='tw-flex tw-flex-row tw-w-full tw-my-4'>
         {renderDate()}
       </div>
 
-      <div className={Tw().flexRow().my(4).$()}>
+      <div className='tw-flex tw-flex-row tw-my-4'>
         {renderPercentage()}
       </div>
 
-      <div className={Tw().flexRow().my(4).$()}>
+      <div className='tw-flex tw-flex-row tw-my-4'>
         {renderLeftDay()}
       </div>
 

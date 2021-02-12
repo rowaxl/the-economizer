@@ -1,5 +1,4 @@
 import { ReactNode } from "react"
-import { Tw } from "../tw"
 
 interface IDeckProps {
   deckTitle?: string
@@ -8,15 +7,15 @@ interface IDeckProps {
 
 const CardDeck = ({ deckTitle, cards }: IDeckProps) => {
   return (
-    <div className={Tw().flexColumn().minHeight('1/2').$()}>
+    <div className='tw-flex tw-flex-col tw-min-h-1/2'>
       {
         deckTitle &&
-        <h4 className={Tw().fontSize('2xl').textColor('black').textColor('white', 'dark').my(4).$()}>
+        <h4 className='tw-text-2xl tw-text-black dark:tw-text-white tw-my-4'>
           {deckTitle}
         </h4>
       }
 
-      <div className={Tw().width('full').flexRow().flex('wrap').justify('start').$()}>
+      <div className='tw-w-full tw-flex tw-flex-row tw-flex-wrap tw-justify-start'>
         { cards && cards }
       </div>
     </div>

@@ -1,7 +1,6 @@
 import { useRouter } from "next/router"
 import { useSelector } from 'react-redux'
 import { ICombinedStates } from "../store/reducers"
-import { Tw } from "../tw"
 
 const Header = () => {
   const router = useRouter()
@@ -10,19 +9,16 @@ const Header = () => {
   return (
     router.pathname === '/' ?
       <></> :
-      <header className={Tw()
-        .textColor('black').textColor('white', 'dark')
-        .fontSize('3xl')
-        .bgColor('gray-light').bgColor('gray-dark', 'dark')
-        .border('b').borderColor('gray-dark').borderColor('gray-mid', 'dark')
-        .py(4).px(4)
-        .flex().justify('between')
-        .$()}>
-        {location.title}
+      <header className='tw-text-black dark:tw-text-white tw-text-3xl tw-bg-gray-light dark:tw-bg-gray-dark tw-border-b tw-border-gray-dark dark:tw-border-gray-mid tw-py-4 tw-px-4 tw-flex tw-justify-between'>
+        <p>
+          {location.title}
+        </p>
 
-        {auth.user && auth.user.name}
+        <p>
+          {auth.user && `Welcome ${auth.user.name}!`}
+        </p>
       </header>
-  );
+  )
 }
 
-export default Header;
+export default Header

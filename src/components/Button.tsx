@@ -1,5 +1,3 @@
-import { Tw } from "../tw"
-
 interface IButtonProps {
   text: string
   variant: string
@@ -9,30 +7,24 @@ interface IButtonProps {
 const buttonColor = (variant: string) => {
   switch (variant) {
     case 'primary':
-      return ['indigo-500', 'indigo-600']
+      return 'tw-border-indigo-500 focus:tw-border-indigo-600 tw-bg-indigo-500 focus:tw-bg-indigo-600'
     case 'success':
-      return ['green-500', 'green-600']
+      return 'tw-border-green-500 focus:tw-border-green-600 tw-bg-green-500 focus:tw-bg-green-600'
     case 'error':
-      return ['red-500', 'red-600']
+      return 'tw-border-red-500 focus:tw-border-red-600 tw-bg-red-500 focus:tw-bg-red-600'
     case 'info':
-      return ['teal-500', 'teal-600']
+      return 'tw-border-teal-500 focus:tw-border-teal-600 tw-bg-teal-500 focus:tw-bg-teal-600'
     default:
-      return ['', '']
+      return 'tw-border-gray-500 focus:tw-border-gray-600 tw-bg-gray-500 focus:tw-bg-gray-600'
   }
 }
 
 const Button = ({ text, variant, onClick }: IButtonProps) => {
-  const [defaultColor, focusedColor] = buttonColor(variant)
+  const color = buttonColor(variant)
 
   return (
     <button
-      className={Tw()
-        .border().borderColor(defaultColor).borderColor(focusedColor, 'focus')
-        .bgColor(defaultColor).bgColor(focusedColor, 'focus')
-        .textColor('white')
-        .rounded('md').px(4).py(2).transition().selectNone()
-        .width('full')
-        .$()}
+      className={`tw-border tw-text-white tw-rounded-md tw-px-4 tw-py-2 transition ease select-none tw-w-full ` + color}
       onClick={onClick}
     >
       {text}

@@ -30,6 +30,7 @@ module.exports = {
       yellow: colors.amber,
       blue: colors.blue,
       teal: colors.teal,
+      green: colors.green,
     },
     minHeight: {
       '0': '0',

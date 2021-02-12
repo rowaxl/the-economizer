@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react'
 import Header from './Header'
 import Footer from './Footer'
-import { Tw } from '../tw'
 
 type Props = {
   children?: ReactNode
@@ -9,10 +8,10 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
   return (
-    <div className={Tw().flexColumn().screenHeight().screenWidth().bgColor('gray-300').bgColor('gray-800', 'dark').$()}>
+    <div className='tw-flex tw-flex-col tw-h-screen tw-w-screen tw-bg-gray-300 dark:tw-bg-gray-800'>
       <Header />
 
-      <main className={Tw().screenWidth().flex('1').px(8).mx('auto').overflowScroll().$()}>
+      <main className='tw-w-screen tw-flex-1 tw-px-8 tw-mx-auto tw-overflow-scroll'>
         {children}
       </main>
 

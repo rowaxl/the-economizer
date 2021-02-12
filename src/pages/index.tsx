@@ -32,8 +32,6 @@ const IndexPage = () => {
     router.push('/dashboard')
   }
 
-  console.log(process.env)
-
   return (
     <div className='tw-h-full tw-w-full tw-flex tw-flex-col tw-justify-center'>
       <div className="tw-content tw-text-3xl tw-text-center md:tw-text-left">

@@ -3,13 +3,13 @@
 CICCC WAMD Node.js course Final Project.
 Using Next.js with typescript, PWA.
 ## Overview
+![](./overview.png)
 
-Set your monthly budget and share your save rate.
+Set your monthly saving plan and manage it!
 
 ### Pages
 
-Landing
-SignIn
-Home
-Budgets
+Signin
+Dashboard
+Plan Detail
 

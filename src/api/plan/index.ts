@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch'
 import { IPlan } from '../../store/reducers/plans'
 
 const BASE_URL = process.env['NEXT_PUBLIC_API_URL'] || 'http://lvh.me:5000'
-const ENDPOINT = BASE_URL + '/plans'
+const ENDPOINT = BASE_URL + 'plans'
 
 export const fetchPlans = async (token: string) => {
   const res = await fetch(ENDPOINT, {

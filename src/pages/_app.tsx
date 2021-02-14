@@ -11,6 +11,7 @@ import { Provider as AuthProvider } from 'next-auth/client'
 const { store, persistor } = configStore()
 
 import 'tailwindcss/tailwind.css'
+import 'react-daterange-picker/dist/css/react-calendar.css'
 
 import Layout from '../components/Layout'
 

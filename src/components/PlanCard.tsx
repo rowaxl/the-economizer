@@ -1,21 +1,20 @@
 import moment from 'moment'
 import { useRouter } from 'next/router'
+import { Moment } from 'moment'
+
 import Card from './Card'
 import Button from './Button'
 
 interface IProps {
   id: string
-  title?: string
-  // percentage: number
+  title: string
   diff: number
-  date: Date
+  startDate: Moment
+  endDate: Moment
 }
 
-const MILISEC_A_DAY = 1000 * 60 * 60 * 24
-
-const PlanCard = ({ id, title, diff, date }: IProps) => {
+const PlanCard = ({ id, title, diff, startDate, endDate }: IProps) => {
   const router = useRouter()
-  const currentMoment = moment(date).add(1, 'month').subtract(1, 'day')
 
   const renderLeftOver = () => {
     return (
@@ -32,7 +31,7 @@ const PlanCard = ({ id, title, diff, date }: IProps) => {
   const renderDate = () => {
     return (
       <h6 className='tw-w-full tw-text-2xl tw-text-center tw-text-black dark:tw-text-white'>
-        {currentMoment.format('MMM YYYY')}
+        {`${startDate.format('YYYY-MM-DD')} ~ ${endDate.format('YYYY-MM-DD')}`}
       </h6>
     )
   }
@@ -40,7 +39,7 @@ const PlanCard = ({ id, title, diff, date }: IProps) => {
   const renderLeftDay = () => {
     const today = moment()
 
-    if (today.unix() > currentMoment.unix()) {
+    if (today.unix() > endDate.unix()) {
       return (
         <div className='tw-my-3'></div>
       )
@@ -48,7 +47,7 @@ const PlanCard = ({ id, title, diff, date }: IProps) => {
 
     return (
       <p className='tw-w-full tw-text-lg tw-text-center dark:tw-text-white'>
-        {`${(currentMoment.diff(today) / MILISEC_A_DAY).toFixed(0)} days left`}
+        {`${endDate.diff(today, 'days')} days left`}
       </p>
     )
   }

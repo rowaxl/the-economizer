@@ -33,8 +33,8 @@ const IndexPage = () => {
   }
 
   return (
-    <div className='tw-h-full tw-w-full tw-flex tw-flex-col tw-justify-center'>
-      <div className="tw-content tw-text-3xl tw-text-center md:tw-text-left">
+    <div className='tw-h-full tw-w-full tw-flex tw-flex-col sm:tw-flex-row tw-justify-center tw-items-center'>
+      <div className="tw-content tw-text-3xl tw-text-center sm:tw-text-left">
         <h1 className="tw-text-5xl tw-text-blue-500 tw-font-bold">
           Economizer
         </h1>
@@ -43,7 +43,7 @@ const IndexPage = () => {
         </p>
       </div>
 
-      <div className="tw-container tw-mx-auto tw-flex tw-my-6 tw-flex-col tw-items-center">
+      <div className="tw-container tw-mx-auto tw-flex tw-my-6 tw-flex-col tw-items-center tw-w-1/5 tw-min-w-max">
         {
           session ?
             <Button

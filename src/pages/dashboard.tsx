@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 
 import PlanCard from '../components/PlanCard'
 import CardDeck from '../components/CardDeck'
-import Modal from '../components/Modal'
+import CreatePlanModal, { IFormData } from '../components/CreatePlanModal'
 import { ICombinedStates } from '../store/reducers'
 
 import { calcPercentage } from '../utils'
@@ -21,7 +21,7 @@ const DashboardPage = () => {
   const latestPlans = () => {
     if (!plans.plans) return
 
-    return plans.plans.sort((a, b) => new Date(a.date) < new Date(b.date) ? 1 : -1 ).map(plan => {
+    return plans.plans.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1 ).map(plan => {
       const [diff] = calcPercentage(plan.records)
 
       return (
@@ -31,7 +31,9 @@ const DashboardPage = () => {
         >
           <PlanCard
             id={plan.id}
-            date={new Date(plan.date)}
+            title={plan.title}
+            startDate={plan.start}
+            endDate={plan.end}
             diff={diff}
           />
         </div>
@@ -61,13 +63,14 @@ const DashboardPage = () => {
     setOpenModal(false)
   }
 
-  const handleSubmit = (date: string) => {
+  const handleSubmit = (data: IFormData) => {
     if (!auth.user) return
 
     dispatch(addPlanAction(auth.user, {
       id: ulid(),
-      date,
-      records: []
+      ...data,
+      records: [],
+      createdAt: Date.now()
     }))
   }
 
@@ -80,13 +83,13 @@ const DashboardPage = () => {
 
       <button
         type="button"
-        className="tw-fixed tw-bottom-20 tw-right-12 tw-border tw-border-indigo-500 tw-text-indigo-500 tw-rounded-md tw-px-4 tw-py-2 tw-transition tw-duration-500 tw-ease tw-select-none hover:tw-text-white hover:tw-bg-indigo-600 focus:tw-outline-none focus:tw-shadow-outline"
+        className="tw-fixed tw-bottom-20 tw-right-12 tw-border tw-rounded-md tw-px-4 tw-py-2 tw-transition tw-duration-500 tw-ease tw-select-none tw-text-white tw-bg-indigo-600 tw-border-indigo-500 hover:tw-text-indigo-200 hover:tw-bg-transparent focus:tw-outline-none focus:tw-shadow-outline"
         onClick={handleOpenModal}
       >
-        Add New
+        Add New Plan
       </button>
 
-      <Modal
+      <CreatePlanModal
         open={openModal}
         handleClose={handleCloseModal}
         onSubmit={handleSubmit}

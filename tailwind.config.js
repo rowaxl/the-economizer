@@ -44,5 +44,4 @@ module.exports = {
     textColor: theme => theme("colors"),
   },
   darkMode: 'media',
-  variants: {},
 }

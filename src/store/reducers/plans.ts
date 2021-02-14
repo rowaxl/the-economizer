@@ -1,4 +1,5 @@
 import { AnyAction } from "redux"
+import { Moment } from 'moment'
 import { IUser } from "./auth"
 
 import { fetchPlans, postPlan } from '../../api/plan'
@@ -14,8 +15,11 @@ export interface IRecord {
 
 export interface IPlan {
   id: string
-  date: string
+  title: string
+  start: Moment,
+  end: Moment
   records: IRecord[]
+  createdAt: number
 }
 
 export interface IPlanState {

@@ -1,11 +1,15 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
+import { ulid } from 'ulid'
 
 import { updateLocation } from '../../store/reducers/location'
+import { updatePlanAction } from '../../store/reducers/plans'
 import { ICombinedStates } from '../../store/reducers'
 import { calcPercentage } from '../../utils'
+
 import Record from '../../components/Record'
+import RecordModal, { IRcordFormData } from '../../components/RecordModal'
 
 const PlanDetail = () => {
   const router = useRouter()
@@ -14,6 +18,9 @@ const PlanDetail = () => {
 
   const { planId } = router.query
   const planDetail = plans.plans?.find(p => p._id === planId)
+
+  const [showRecordModal, setShowRecordModal] = useState(false)
+  const [targetRecordData, setTargetRecordData] = useState<IRcordFormData | undefined>()
 
   useEffect(() => {
     if (planDetail)
@@ -40,6 +47,34 @@ const PlanDetail = () => {
         {leftOver >= 0 ? `$${leftOver}` : `-$${-leftOver}`}
       </h6>
     )
+  }
+
+  const showAddRecordModal = () => {
+    setShowRecordModal(true)
+  }
+
+  const closeAddRecordModal = () => {
+    setShowRecordModal(false)
+  }
+
+  const returnToDashboard = () => {
+    router.push('/dashboard')
+  }
+
+  const submitRecord = (formData: IRcordFormData) => {
+    const newPlan = {
+      ...planDetail,
+      records: planDetail.records.concat({
+        ...formData,
+        id: ulid(),
+        date: formData.date.unix() * 1000,
+        createdAt: Date.now(),
+      })
+    }
+    dispatch(updatePlanAction(
+      newPlan,
+      auth.user
+    ))
   }
 
   return (
@@ -83,18 +118,33 @@ const PlanDetail = () => {
         </div>
 
         <div className="tw-flex-column">
-            {/* TODO: Add Button / Return Button */}
-            {/* TODO: Add / Edit Record Modal, function  */}
+            {/* TODO: Edit Record Modal, function  */}
             {/* TODO: Category Icons */}
 
-          <button>
+          <button
+            type="button"
+            className="tw-border tw-rounded-md tw-px-4 tw-py-2 tw-transition tw-duration-500 tw-ease tw-select-none tw-text-white tw-bg-indigo-600 tw-border-indigo-500 hover:tw-text-indigo-200 hover:tw-bg-transparent focus:tw-outline-none focus:tw-shadow-outline"
+            onClick={showAddRecordModal}
+          >
             Add Record
           </button>
-          <button>
+
+          <button
+            type="button"
+            className="tw-right-12 tw-border tw-rounded-md tw-px-4 tw-py-2 tw-transition tw-duration-500 tw-ease tw-select-none dark:tw-text-white tw-border-gray-300 hover:tw-text-gray-200 hover:tw-bg-transparent focus:tw-outline-none focus:tw-shadow-outline"
+            onClick={returnToDashboard}
+          >
             Return
           </button>
         </div>
       </div>
+
+      <RecordModal
+        open={showRecordModal}
+        data={targetRecordData}
+        onSubmit={submitRecord}
+        handleClose={closeAddRecordModal}
+      />
     </div>
   )
 }

@@ -1,16 +1,16 @@
 import { AnyAction } from "redux"
-import { Moment } from 'moment'
 import { IUser } from "./auth"
 
-import { fetchPlans, postPlan } from '../../api/plan'
+import { fetchPlans, postPlan, updatePlan } from '../../api/plan'
 
 export const FETCH_PLANS = 'FETCH_PLANS'
 
 export interface IRecord {
   id: string
-  createdAt: number
   amount: number
   category: string
+  date: number
+  createdAt: number
 }
 
 export interface IPlan {
@@ -51,6 +51,16 @@ export const addPlanAction = (user: IUser, plan: IPlanData) => async (dispatch: 
   if (!user.token) return dispatch({ type: '' })
 
   await postPlan(user.token, plan)
+
+  const plans: IPlan[] = await fetchPlans(user.token)
+
+  return dispatch({ type: FETCH_PLANS, payload: plans })
+}
+
+export const updatePlanAction = (plan: IPlan, user?: IUser) => async (dispatch: DispatchType<IPlanAction>) => {
+  if (!user || !user.token) return dispatch({ type: '' })
+
+  await updatePlan(user.token, plan)
 
   const plans: IPlan[] = await fetchPlans(user.token)
 

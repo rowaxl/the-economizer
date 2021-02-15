@@ -44,4 +44,7 @@ module.exports = {
     textColor: theme => theme("colors"),
   },
   darkMode: 'media',
+  plugins: [
+    require('@tailwindcss/forms')
+  ]
 }

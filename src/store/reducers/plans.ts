@@ -14,12 +14,18 @@ export interface IRecord {
 }
 
 export interface IPlan {
-  id: string
+  _id?: string
   title: string
-  start: Moment,
-  end: Moment
+  start: number,
+  end: number
   records: IRecord[]
   createdAt: number
+}
+
+export interface IPlanData {
+  title: string
+  start: number,
+  end: number
 }
 
 export interface IPlanState {
@@ -41,7 +47,7 @@ export const fetchPlansAction = (user: IUser) => async (dispatch: DispatchType<I
   return dispatch({ type: FETCH_PLANS, payload: plans })
 }
 
-export const addPlanAction = (user: IUser, plan: IPlan) => async (dispatch: DispatchType<IPlanAction>) => {
+export const addPlanAction = (user: IUser, plan: IPlanData) => async (dispatch: DispatchType<IPlanAction>) => {
   if (!user.token) return dispatch({ type: '' })
 
   await postPlan(user.token, plan)

@@ -2,7 +2,7 @@ import { ReactNode } from "react"
 
 interface IDeckProps {
   deckTitle?: string
-  cards?: ReactNode[]
+  cards?: ReactNode | ReactNode[]
 }
 
 const CardDeck = ({ deckTitle, cards }: IDeckProps) => {

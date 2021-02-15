@@ -13,7 +13,7 @@ const PlanDetail = () => {
   const { auth, plans } = useSelector((state: ICombinedStates) => state)
 
   const { planId } = router.query
-  const planDetail = plans.plans?.find(p => p.id === planId)
+  const planDetail = plans.plans?.find(p => p._id === planId)
 
   useEffect(() => {
     if (planDetail)
@@ -83,8 +83,12 @@ const PlanDetail = () => {
         </div>
 
         <div className="tw-flex-column">
+            {/* TODO: Add Button / Return Button */}
+            {/* TODO: Add / Edit Record Modal, function  */}
+            {/* TODO: Category Icons */}
+
           <button>
-            Add
+            Add Record
           </button>
           <button>
             Return

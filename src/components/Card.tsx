@@ -7,10 +7,10 @@ interface IProps {
 
 const Card = ({ children, title }: IProps) => {
   return (
-    <div className='tw-w-full hover:tw-shadow-xl'>
+    <div className='tw-w-full hover:tw-shadow-xl tw-border dark:tw-border-gray-800'>
       {
         title &&
-        <h4 className='tw-text-lg dark:tw-text-white tw-my-4'>
+        <h4 className='tw-text-xl tw-text-center dark:tw-text-white tw-my-4'>
           {title}
         </h4>
       }

@@ -6,6 +6,7 @@ import { signIn, useSession } from 'next-auth/client'
 import { encodeUserToken } from '../utils'
 
 import Button from '../components/Button'
+import LandingImage from '../components/LandingImage'
 
 const IndexPage = () => {
   const router = useRouter()
@@ -33,7 +34,9 @@ const IndexPage = () => {
   }
 
   return (
-    <div className='tw-h-full tw-w-full tw-flex tw-flex-col sm:tw-flex-row tw-justify-center tw-items-center'>
+    <div className='tw-h-full tw-w-full tw-flex tw-flex-col sm:tw-flex-row tw-justify-center tw-items-center tw-z-20'>
+      <LandingImage />
+
       <div className="tw-content tw-text-3xl tw-text-center sm:tw-text-left">
         <h1 className="tw-text-5xl tw-text-blue-500 tw-font-bold">
           Economizer

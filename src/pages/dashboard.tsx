@@ -10,7 +10,7 @@ import { ICombinedStates } from '../store/reducers'
 import { calcPercentage } from '../utils'
 import { updateLocation } from '../store/reducers/location'
 import { fetchPlansAction, addPlanAction } from '../store/reducers/plans'
-import { ulid } from 'ulid'
+import moment from 'moment'
 
 const DashboardPage = () => {
   const router = useRouter()
@@ -19,27 +19,38 @@ const DashboardPage = () => {
   const [openModal, setOpenModal] = useState(false)
 
   const latestPlans = () => {
-    if (!plans.plans) return
+    if (!plans.plans)
+      return (
+        <div className="tw-text-xl dark:tw-text-white">
+          Loading...
+        </div>
+      )
 
-    return plans.plans.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1 ).map(plan => {
+    if(!plans.plans.length)
+      return (
+        <div className="tw-text-xl dark:tw-text-white">
+          There's no plan yet. Please click Add New Plan button and create your first plan!
+        </div>
+      )
+
+    return plans.plans.sort((a, b) => a.end < b.end ? 1 : -1 ).map(plan => {
       const [diff] = calcPercentage(plan.records)
 
       return (
         <div
-          key={plan.id}
+          key={plan._id}
           className='tw-w-1/3'
         >
           <PlanCard
-            id={plan.id}
+            id={plan._id}
             title={plan.title}
-            startDate={plan.start}
-            endDate={plan.end}
+            startDate={moment(plan.start * 1000)}
+            endDate={moment(plan.end * 1000)}
             diff={diff}
           />
         </div>
     )})
   }
-    
 
   useEffect(() => {
     dispatch(updateLocation({ path: '/dashboard', title: 'Dashboard' }))
@@ -67,10 +78,9 @@ const DashboardPage = () => {
     if (!auth.user) return
 
     dispatch(addPlanAction(auth.user, {
-      id: ulid(),
-      ...data,
-      records: [],
-      createdAt: Date.now()
+      title: data.title,
+      start: data.start.unix(),
+      end: data.end.unix()
     }))
   }
 

@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import { IPlan } from '../../store/reducers/plans'
+import { IPlanData } from '../../store/reducers/plans'
 
 const BASE_URL = process.env['NEXT_PUBLIC_API_URL'] || 'http://lvh.me:5000/'
 const ENDPOINT = BASE_URL + 'plans'
@@ -17,7 +17,7 @@ export const fetchPlans = async (token: string) => {
   return await res.json()
 }
 
-export const postPlan = async (token: string, plan: IPlan) => {
+export const postPlan = async (token: string, plan: IPlanData) => {
   const res = await fetch(ENDPOINT, {
     method: 'POST',
     headers: {

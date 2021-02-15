@@ -6,7 +6,7 @@ import Card from './Card'
 import Button from './Button'
 
 interface IProps {
-  id: string
+  id?: string
   title: string
   diff: number
   startDate: Moment

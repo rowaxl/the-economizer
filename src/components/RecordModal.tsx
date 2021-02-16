@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import moment, { Moment } from 'moment'
 import DateRangePicker from 'react-daterange-picker'
+import { IRecord } from '../store/reducers/plans'
 
 export interface IRcordFormData {
   category: string
@@ -10,29 +11,45 @@ export interface IRcordFormData {
 
 interface IModalProps {
   open: boolean
-  data?: IRcordFormData
+  data?: IRecord
   handleClose: () => void
   onSubmit: (formData: IRcordFormData) => void
 }
 
-const CATEGORIES = [
-  { label: 'Housing', icon: '🏠' }
+export const CATEGORIES = [
+  { label: 'Housing', icon: '🏠' },
+  { label: 'Transportation', icon: '🚌' },
+  { label: 'Grocery', icon: '🍖' },
+  { label: 'Utilities', icon: '📐' },
+  { label: 'Medical & Healthcare', icon: '🏥' },
+  { label: 'Tax & Insurance', icon: '📜' },
+  { label: 'Saving', icon: '💰' },
+  { label: 'Education', icon: '📚' },
+  { label: 'Entertainment', icon: '🏀' },
+  { label: 'Income', icon: '💵' },
+  { label: 'Uncategorised', icon: '❓' },
 ]
 
 const RecordModal = ({ open, data, onSubmit, handleClose }: IModalProps) => {
   const today = moment()
-
-  const [category, setCategory] = useState(data ? data.category : '')
-  const [amount, setAmount] = useState(data ? data.amount : 0)
+  
+  const [category, setCategory] = useState(data ? data.category : 'Housing')
+  const [amount, setAmount] = useState(data ? Number(data.amount).toString() : '0')
   const [openDatePicker, setOpenDatePicker] = useState(false)
-  const [date, setDate] = useState(data ? data.date : today)
+  const [date, setDate] = useState(data ? moment(data.date) : today)
+
+  useEffect(() => {
+    setCategory(data ? data.category : 'Housing')
+    setAmount(data ? Number(data.amount).toString() : '0')
+    setDate(data ? moment(data.date) : today)
+  }, [data])
 
   const onChangeCategory = (value: string) => {
     setCategory(value)
   }
 
   const onChangeAmount = (value: string) => {
-    setAmount(parseFloat(value))
+    setAmount(value)
   }
 
   const onSelectDate = (value: Moment) => {
@@ -46,7 +63,7 @@ const RecordModal = ({ open, data, onSubmit, handleClose }: IModalProps) => {
   }
 
   const handleOnSubmit = () => {
-    onSubmit({ category, amount, date })
+    onSubmit({ category, amount: parseFloat(amount), date })
     handleClose()
   }
 
@@ -59,8 +76,8 @@ const RecordModal = ({ open, data, onSubmit, handleClose }: IModalProps) => {
 
   return (
     open ? 
-      <div className="tw-animated tw-fadeIn tw-fixed tw-z-50 tw-pin tw-overflow-auto tw-bg-gray-900 tw-bg-opacity-50 tw-flex tw-w-screen tw-h-screen tw-top-0 tw-left-0 tw-flex tw-justify-center tw-align-center">
-        <div className="tw-animated tw-fadeInUp tw-shadow-inner tw-max-w-md tw-h-auto md:tw-relative tw-pin-b tw-pin-x tw-align-top tw-m-auto tw-justify-end md:tw-justify-center tw-p-8 tw-bg-white dark:bg-gray-600 tw-md:rounded tw-w-full md:tw-h-auto md:tw-shadow tw-flex tw-flex-col">
+      <div className="tw-animated tw-fadeIn tw-fixed tw-duration-500 tw-ease-in-out tw-z-50 tw-pin tw-overflow-auto tw-bg-gray-900 tw-bg-opacity-50 tw-flex tw-w-screen tw-h-screen tw-top-0 tw-left-0 tw-flex tw-justify-center tw-align-center">
+        <div className="tw-animated tw-fadeInUp tw-shadow-inner tw-duration-500 tw-ease-in-out tw-max-w-md tw-h-auto md:tw-relative tw-pin-b tw-pin-x tw-align-top tw-m-auto tw-justify-end md:tw-justify-center tw-p-8 tw-bg-white dark:bg-gray-600 tw-md:rounded tw-w-full md:tw-h-auto md:tw-shadow tw-flex tw-flex-col">
           <h2 className="tw-text-xl tw-text-center tw-font-hairline md:tw-leading-loose tw-text-grey-200 md:tw-mt-8 tw-mb-4">
             { data ? 'Edit Record' : 'Add Record' }
           </h2>
@@ -75,6 +92,8 @@ const RecordModal = ({ open, data, onSubmit, handleClose }: IModalProps) => {
                 <select
                   className="tw-form-select tw-mt-1 tw-block tw-w-full"
                   onChange={(e) => onChangeCategory(e.target.value)}
+                  value={category}
+                  defaultValue={'Housing'}
                 >
                   {renderOptions()}
                 </select>
@@ -134,7 +153,7 @@ const RecordModal = ({ open, data, onSubmit, handleClose }: IModalProps) => {
               className="tw-bg-green-400 tw-border-b-2 tw-ml-2 hover:tw-bg-green-200 tw-font-bold tw-py-2 tw-px-4 tw-rounded"
               onClick={handleOnSubmit}
             >
-              Add
+              Save
             </button>
             <button
               className="bg-grey-100 tw-ml-2 hover:tw-bg-gray-200 tw-text-grey-900 tw-font-bold tw-py-2 tw-px-4 tw-rounded"

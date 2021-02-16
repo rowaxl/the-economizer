@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { ulid } from 'ulid'
 
 import { updateLocation } from '../../store/reducers/location'
-import { updatePlanAction } from '../../store/reducers/plans'
+import { updatePlanAction, IRecord } from '../../store/reducers/plans'
 import { ICombinedStates } from '../../store/reducers'
 import { calcPercentage } from '../../utils'
 
@@ -20,7 +20,7 @@ const PlanDetail = () => {
   const planDetail = plans.plans?.find(p => p._id === planId)
 
   const [showRecordModal, setShowRecordModal] = useState(false)
-  const [targetRecordData, setTargetRecordData] = useState<IRcordFormData | undefined>()
+  const [targetRecordData, setTargetRecordData] = useState<IRecord | undefined>()
 
   useEffect(() => {
     if (planDetail)
@@ -44,16 +44,18 @@ const PlanDetail = () => {
 
     return (
       <h6 className={`tw-text-3xl tw-font-bold ${color}`}>
-        {leftOver >= 0 ? `$${leftOver}` : `-$${-leftOver}`}
+        {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(leftOver)}
       </h6>
     )
   }
 
   const showAddRecordModal = () => {
+    setTargetRecordData(undefined)
     setShowRecordModal(true)
   }
 
-  const closeAddRecordModal = () => {
+  const closeRecordModal = () => {
+    setTargetRecordData(undefined)
     setShowRecordModal(false)
   }
 
@@ -62,17 +64,80 @@ const PlanDetail = () => {
   }
 
   const submitRecord = (formData: IRcordFormData) => {
-    const newPlan = {
-      ...planDetail,
-      records: planDetail.records.concat({
-        ...formData,
-        id: ulid(),
-        date: formData.date.unix() * 1000,
-        createdAt: Date.now(),
-      })
+    if (!targetRecordData) {
+      // create new Record
+      const newPlan = {
+        ...planDetail,
+        records: planDetail.records.concat({
+          ...formData,
+          id: ulid(),
+          date: formData.date.unix() * 1000,
+          createdAt: Date.now(),
+        })
+      }
+
+      dispatch(updatePlanAction(
+        newPlan,
+        auth.user
+      ))
+
+      return
     }
+
+    const targetIndex = planDetail.records.findIndex(r => r.id === targetRecordData.id)
+
+    const newRecords = [
+      ...planDetail.records.slice(0, targetIndex),
+      {
+        ...planDetail.records[targetIndex],
+        ...formData,
+        date: formData.date.unix() * 1000
+      },
+      ...planDetail.records.slice(targetIndex + 1)
+    ]
+
+    const updatedPlan = {
+      ...planDetail,
+      records: newRecords
+    }
+
     dispatch(updatePlanAction(
-      newPlan,
+      updatedPlan,
+      auth.user
+    ))
+
+    closeRecordModal()
+  }
+
+  const editRecord = (id: string) => {
+    const targetRecord = planDetail.records.find(r => r.id === id)
+
+    if (!targetRecord) return
+
+    setTargetRecordData(targetRecord)
+    setShowRecordModal(true)
+  }
+
+
+  const deleteRecord = (id: string) => {
+    const targetRecord = planDetail.records.find(r => r.id === id)
+
+    if (!targetRecord) return
+
+    const targetIndex = planDetail.records.findIndex(r => r.id === targetRecord.id)
+
+    const newRecords = [
+      ...planDetail.records.slice(0, targetIndex),
+      ...planDetail.records.slice(targetIndex + 1)
+    ]
+
+    const updatedPlan = {
+      ...planDetail,
+      records: newRecords
+    }
+
+    dispatch(updatePlanAction(
+      updatedPlan,
       auth.user
     ))
   }
@@ -87,8 +152,16 @@ const PlanDetail = () => {
 
           <ul className="tw-flex tw-flex-col tw-p-4 tw-overflow-scroll tw-h-full ">
             {
-              expences.sort((a, b) => a.createdAt < b.createdAt ? 1 : -1).map(e => (
-                <Record key={e.id} category={e.category} amount={e.amount} date={e.createdAt} />
+              expences.sort((a, b) => a.createdAt < b.createdAt ? 1 : -1).map(r => (
+                <Record
+                  key={r.id}
+                  id={r.id}
+                  category={r.category}
+                  amount={r.amount}
+                  date={r.date}
+                  editRecord={editRecord}
+                  deleteRecord={deleteRecord}
+                />
               ))
             }
           </ul>
@@ -101,8 +174,16 @@ const PlanDetail = () => {
 
           <ul className="tw-flex tw-flex-col tw-p-4">
             {
-              incomes.sort((a, b) => a.createdAt < b.createdAt ? 1 : -1).map(i => (
-                <Record key={i.id} category={i.category} amount={i.amount} date={i.createdAt} />
+              incomes.sort((a, b) => a.createdAt < b.createdAt ? 1 : -1).map(r => (
+                <Record
+                  key={r.id}
+                  id={r.id}
+                  category={r.category}
+                  amount={r.amount}
+                  date={r.date}
+                  editRecord={editRecord}
+                  deleteRecord={deleteRecord}
+                />
               ))
             }
           </ul>
@@ -118,9 +199,6 @@ const PlanDetail = () => {
         </div>
 
         <div className="tw-flex-column">
-            {/* TODO: Edit Record Modal, function  */}
-            {/* TODO: Category Icons */}
-
           <button
             type="button"
             className="tw-border tw-rounded-md tw-px-4 tw-py-2 tw-transition tw-duration-500 tw-ease tw-select-none tw-text-white tw-bg-indigo-600 tw-border-indigo-500 hover:tw-text-indigo-200 hover:tw-bg-transparent focus:tw-outline-none focus:tw-shadow-outline"
@@ -131,7 +209,7 @@ const PlanDetail = () => {
 
           <button
             type="button"
-            className="tw-right-12 tw-border tw-rounded-md tw-px-4 tw-py-2 tw-transition tw-duration-500 tw-ease tw-select-none dark:tw-text-white tw-border-gray-300 hover:tw-text-gray-200 hover:tw-bg-transparent focus:tw-outline-none focus:tw-shadow-outline"
+            className="tw-mx-4 tw-border tw-rounded-md tw-px-4 tw-py-2 tw-transition tw-duration-500 tw-ease tw-select-none dark:tw-text-white tw-border-gray-300 hover:tw-text-gray-200 hover:tw-bg-gray-200 focus:tw-outline-none focus:tw-shadow-outline"
             onClick={returnToDashboard}
           >
             Return
@@ -143,7 +221,7 @@ const PlanDetail = () => {
         open={showRecordModal}
         data={targetRecordData}
         onSubmit={submitRecord}
-        handleClose={closeAddRecordModal}
+        handleClose={closeRecordModal}
       />
     </div>
   )

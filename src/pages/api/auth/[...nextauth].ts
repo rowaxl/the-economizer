@@ -20,7 +20,8 @@ export default NextAuth({
         token.accessToken = account.accessToken
       }
 
-      console.log({ user, profile, isNewUser })
+      if (process.env.NODE_ENV === 'development')
+        console.log({ user, profile, isNewUser })
 
       return token
     }

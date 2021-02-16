@@ -13,3 +13,6 @@ Signin
 Dashboard
 Plan Detail
 
+### Functions 
+Add new budget plan
+Add / Edit / Delete detail of your expense / income record

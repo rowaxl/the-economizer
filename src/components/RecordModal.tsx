@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, ChangeEvent } from 'react'
 import moment, { Moment } from 'moment'
 import DateRangePicker from 'react-daterange-picker'
 import { IRecord } from '../store/reducers/plans'
@@ -44,8 +44,8 @@ const RecordModal = ({ open, data, onSubmit, handleClose }: IModalProps) => {
     setDate(data ? moment(data.date) : today)
   }, [data])
 
-  const onChangeCategory = (value: string) => {
-    setCategory(value)
+  const onChangeCategory = (event: ChangeEvent<HTMLSelectElement>) => {
+    setCategory(event.target.value)
   }
 
   const onChangeAmount = (value: string) => {
@@ -91,9 +91,8 @@ const RecordModal = ({ open, data, onSubmit, handleClose }: IModalProps) => {
               <div className="tw-flex tw-w-full tw-mt-2">
                 <select
                   className="tw-form-select tw-mt-1 tw-block tw-w-full"
-                  onChange={(e) => onChangeCategory(e.target.value)}
+                  onChange={onChangeCategory}
                   value={category}
-                  defaultValue={'Housing'}
                 >
                   {renderOptions()}
                 </select>

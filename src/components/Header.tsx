@@ -1,10 +1,15 @@
 import { useRouter } from "next/router"
 import { useSelector } from 'react-redux'
+import { signOut } from 'next-auth/client'
+
 import { ICombinedStates } from "../store/reducers"
 
 const Header = () => {
   const router = useRouter()
   const { location, auth } = useSelector((state: ICombinedStates) => state)
+  const onSignOut = () => {
+    signOut({ callbackUrl: '/' })
+  }
 
   return (
     router.pathname === '/' ?
@@ -15,8 +20,12 @@ const Header = () => {
         </p>
 
         <p>
-          {auth.user && `Welcome ${auth.user.name}!`}
+          {auth.user && auth.user.name}
         </p>
+
+        <button onClick={onSignOut}>
+          SIGN OUT
+        </button>
       </header>
   )
 }

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 
 import PlanCard from '../components/PlanCard'
 import CardDeck from '../components/CardDeck'
+import ChartCard from '../components/Charts'
 import CreatePlanModal, { IFormData } from '../components/CreatePlanModal'
 import { ICombinedStates } from '../store/reducers'
 
@@ -18,7 +19,7 @@ const DashboardPage = () => {
   const { plans, auth } = useSelector((state: ICombinedStates) => state)
   const [openModal, setOpenModal] = useState(false)
 
-  const latestPlans = () => {
+  const renderLatestPlans = () => {
     if (!plans.plans)
       return (
         <div className="tw-text-xl dark:tw-text-white">
@@ -33,7 +34,7 @@ const DashboardPage = () => {
         </div>
       )
 
-    return plans.plans.sort((a, b) => a.end < b.end ? 1 : -1 ).map(plan => {
+    return plans.plans.sort((a, b) => a.end < b.end ? 1 : -1 ).slice(0, 3).map(plan => {
       const [diff] = calcPercentage(plan.records)
 
       return (
@@ -84,11 +85,47 @@ const DashboardPage = () => {
     }))
   }
 
+  const renderCharts = () => {
+    const { plans: currentPlans } = plans
+
+    console.log({ currentPlans })
+
+    if (!currentPlans) return <></>
+
+    const types = ['savings', 'recent', 'categories']
+
+    return types.map(t => {
+      const data = currentPlans.map(p => {
+        return p.records.map(r => ({ date: new Date(r.date).toDateString(), amount: Math.abs(r.amount), category: r.category }))
+      }).flat()
+
+      console.log(data)
+
+      if (t === 'savings') {
+        return <ChartCard key={t} type={t} data={data.filter(d => d.category === 'Saving')} />
+      } else if (t === 'recent') {
+        const previousMonth = new Date()
+        previousMonth.setMonth(new Date().getMonth() - 1)
+
+        return <ChartCard key={t} type={t} data={data.filter(d => new Date(d.date) > previousMonth)} />
+      } else if (t === 'categories') {
+        return <ChartCard key={t} type={t} data={data} />
+      }
+
+      return <></>
+    })
+  }
+
   return (
     <div>
       <CardDeck
+        deckTitle=""
+        cards={renderCharts()}
+      />
+
+      <CardDeck
         deckTitle="Latest Plans"
-        cards={latestPlans()}
+        cards={renderLatestPlans()}
       />
 
       <button

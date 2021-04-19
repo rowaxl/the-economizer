@@ -35,7 +35,6 @@ const yMax = height - margin.top - margin.bottom;
 let tooltipTimeout: number
 
 const DateAmountChart = ({ data }: IProps) => {
-  // scales, memoize for performance
   const xScale = useMemo(
     () =>
       scaleBand({
@@ -45,7 +44,7 @@ const DateAmountChart = ({ data }: IProps) => {
         padding: 0.4,
       }),
     [xMax],
-  );
+  )
 
   const yScale = useMemo(
     () =>

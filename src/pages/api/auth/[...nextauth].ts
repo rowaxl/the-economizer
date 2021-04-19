@@ -26,6 +26,7 @@ export default NextAuth({
     async redirect(url: string, baseUrl: string) {
       return url.startsWith(baseUrl) ? url : baseUrl
     },
+    // @ts-ignore
     async jwt(token: any, user: any, account: any, profile: any, isNewUser: any) {
       if (account?.accesstoken) {
         token.accessToken = account.accessToken

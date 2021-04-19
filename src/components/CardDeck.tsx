@@ -7,7 +7,7 @@ interface IDeckProps {
 
 const CardDeck = ({ deckTitle, cards }: IDeckProps) => {
   return (
-    <div className='tw-flex tw-flex-col tw-min-h-1/2'>
+    <div className='tw-flex tw-flex-col tw-min-h-1/2 tw-mt-4'>
       {
         deckTitle &&
         <h4 className='tw-text-2xl tw-text-black dark:tw-text-white tw-my-4'>

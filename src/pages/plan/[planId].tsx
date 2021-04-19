@@ -65,15 +65,17 @@ const PlanDetail = () => {
 
   const submitRecord = (formData: IRcordFormData) => {
     if (!targetRecordData) {
-      // create new Record
+      const newRecord = {
+        id: ulid(),
+        category: formData.category,
+        amount: formData.category === 'Income' ? formData.amount : -1 * formData.amount,
+        date: formData.date.unix() * 1000,
+        createdAt: Date.now(),
+      }
+
       const newPlan = {
         ...planDetail,
-        records: planDetail.records.concat({
-          ...formData,
-          id: ulid(),
-          date: formData.date.unix() * 1000,
-          createdAt: Date.now(),
-        })
+        records: planDetail.records.concat(newRecord)
       }
 
       dispatch(updatePlanAction(

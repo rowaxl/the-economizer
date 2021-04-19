@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 
 import PlanCard from '../components/PlanCard'
 import CardDeck from '../components/CardDeck'
-import ChartCard from '../components/Charts'
+import ChartCard from '../components/ChartCard'
 import CreatePlanModal, { IFormData } from '../components/CreatePlanModal'
 import { ICombinedStates } from '../store/reducers'
 
@@ -88,21 +88,30 @@ const DashboardPage = () => {
   const renderCharts = () => {
     const { plans: currentPlans } = plans
 
-    console.log({ currentPlans })
-
-    if (!currentPlans) return <></>
+    if (!currentPlans || currentPlans.length < 1) return <></>
 
     const types = ['savings', 'recent', 'categories']
 
     return types.map(t => {
       const data = currentPlans.map(p => {
-        return p.records.map(r => ({ date: new Date(r.date).toDateString(), amount: Math.abs(r.amount), category: r.category }))
+        return p.records.map(r => ({
+          id: r.id,
+          date: new Date(r.date).toDateString(),
+          amount: t === 'savings' ? Math.abs(r.amount) : r.amount,
+          category: r.category
+        }))
       }).flat()
 
-      console.log(data)
-
       if (t === 'savings') {
-        return <ChartCard key={t} type={t} data={data.filter(d => d.category === 'Saving')} />
+        const savings = data
+          .filter(d => d.category === 'Saving')
+          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+
+        return <ChartCard key={t} type={t} data={savings.map((d, i) => ({
+            ...d,
+            amount: savings.slice(0, i).reduce((a, c) => a + c.amount, d.amount)
+          })
+        )} />
       } else if (t === 'recent') {
         const previousMonth = new Date()
         previousMonth.setMonth(new Date().getMonth() - 1)

@@ -42,7 +42,11 @@ type DispatchType<T> = (args: T) => T
 export const fetchPlansAction = (user: IUser) => async (dispatch: DispatchType<IPlanAction>) => {
   if (!user.token) return dispatch({ type: '' })
 
-  const plans:IPlan[] = await fetchPlans(user.token)
+  const plans: IPlan[] | undefined = await fetchPlans(user.token).catch(e => console.error(e))
+
+  if (!plans) {
+    return dispatch({ type: FETCH_PLANS })
+  }
 
   return dispatch({ type: FETCH_PLANS, payload: plans })
 }

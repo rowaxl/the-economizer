@@ -1,4 +1,4 @@
-# The Economizer (Front end)
+# The Economizer (Front End)
 
 CICCC WAMD Node.js course Final Project.
 Using Next.js with typescript, PWA.

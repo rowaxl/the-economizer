@@ -13,11 +13,20 @@ import { updateLocation } from '../store/reducers/location'
 import { fetchPlansAction, addPlanAction } from '../store/reducers/plans'
 import moment from 'moment'
 
+export interface IChartData {
+  id: string
+  date: string
+  amount: number
+  category: string
+}
+
 const DashboardPage = () => {
   const router = useRouter()
   const dispatch = useDispatch()
   const { plans, auth } = useSelector((state: ICombinedStates) => state)
   const [openModal, setOpenModal] = useState(false)
+  const [savingsChartData, setSavingsChartData] = useState<IChartData[]>([])
+  const [leftOverChartData, setLeftOverChartData] = useState<IChartData[]>([])
 
   const renderLatestPlans = () => {
     if (!plans.plans)
@@ -67,6 +76,37 @@ const DashboardPage = () => {
       dispatch(fetchPlansAction(auth.user))
   }, [auth])
 
+  useEffect(() => {
+    if (plans.plans && plans.plans.length > 0) {
+      const savingsData = plans.plans.map(p => {
+        return p.records.map(r => ({
+          id: r.id,
+          date: new Date(r.date).toDateString(),
+          amount: Math.abs(r.amount),
+          category: r.category
+        }))
+      })
+        .flat()
+        .filter(d => d.category === 'Saving')
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      
+      setSavingsChartData(savingsData.map((d, i) => ({
+        ...d,
+        amount: savingsData.slice(0, i).reduce((a, c) => a + c.amount, d.amount)
+      })))
+
+      const leftOvers = plans.plans.map(p => ({
+        id: p.title,
+        date: new Date(p.end).toDateString(),
+        amount: p.records.reduce((a, c) => a + c.amount, 0),
+        category: ''
+      }))
+
+      setLeftOverChartData(leftOvers)
+    }
+
+  }, [plans.plans])
+
   const handleOpenModal = () => {
     setOpenModal(true)
   }
@@ -85,52 +125,12 @@ const DashboardPage = () => {
     }))
   }
 
-  const renderCharts = () => {
-    const { plans: currentPlans } = plans
-
-    if (!currentPlans || currentPlans.length < 1) return <></>
-
-    const types = ['savings', 'recent', 'categories']
-
-    return types.map(t => {
-      const data = currentPlans.map(p => {
-        return p.records.map(r => ({
-          id: r.id,
-          date: new Date(r.date).toDateString(),
-          amount: t === 'savings' ? Math.abs(r.amount) : r.amount,
-          category: r.category
-        }))
-      }).flat()
-
-      if (t === 'savings') {
-        const savings = data
-          .filter(d => d.category === 'Saving')
-          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-
-        return <ChartCard key={t} type={t} data={savings.map((d, i) => ({
-            ...d,
-            amount: savings.slice(0, i).reduce((a, c) => a + c.amount, d.amount)
-          })
-        )} />
-      } else if (t === 'recent') {
-        const previousMonth = new Date()
-        previousMonth.setMonth(new Date().getMonth() - 1)
-
-        return <ChartCard key={t} type={t} data={data.filter(d => new Date(d.date) > previousMonth)} />
-      } else if (t === 'categories') {
-        return <ChartCard key={t} type={t} data={data} />
-      }
-
-      return <></>
-    })
-  }
-
   return (
     <div>
-      <CardDeck
-        deckTitle=""
-        cards={renderCharts()}
-      />
+      <div className="tw-w-full tw-flex tw-flex-row tw-flex-wrap tw-justify-start">
+        <ChartCard type={'savings'} data={savingsChartData} />
+        <ChartCard type={'recent'} data={leftOverChartData} />
+      </div>
 
       <CardDeck
         deckTitle="Latest Plans"

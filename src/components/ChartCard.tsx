@@ -1,5 +1,5 @@
 
-import DateAmountChart from './DateAmountLineChart';
+import DateAmountChart from './DateAmountBarChart';
 
 interface IProps {
   type: string
@@ -8,7 +8,7 @@ interface IProps {
 
 const TITLES = {
   'savings': 'Saving Balance: $',
-  'recent': 'Recent Records',
+  'leftovers': 'Left Over Transitions',
   'categories': 'Expense Categories',
 }
 
@@ -29,7 +29,7 @@ const ChartCard = ({
   const renderChart = () => {
     if (type === 'savings') {
       return <DateAmountChart data={data} />
-    }
+    } else if (type === '')
 
     return <></>
   }

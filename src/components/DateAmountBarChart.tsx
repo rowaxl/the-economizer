@@ -17,6 +17,7 @@ interface IProps {
 }
 
 const getDate = (record: IRecord) => record.date
+const getAmount = (record: IRecord) => record.amount
 
 const tooltipStyles = {
   ...defaultStyles,
@@ -32,7 +33,7 @@ const margin = { top: 10, bottom: 10, left: 0, right: 0 };
 const xMax = width;
 const yMax = height - margin.top - margin.bottom;
 
-let tooltipTimeout: number
+let savingTooltipTimeout: number
 
 const DateAmountChart = ({ data }: IProps) => {
   const xScale = useMemo(
@@ -50,8 +51,9 @@ const DateAmountChart = ({ data }: IProps) => {
     () =>
       scaleLinear<number>({
         round: true,
-        domain: [0, Math.max(...data.map(d => d.amount))],
-        range: [yMax, 0]
+        domain: [0, Math.max(...data.map(getAmount))],
+        range: [yMax, 0],
+        nice: true,
       }),
     [yMax],
   )
@@ -69,43 +71,44 @@ const DateAmountChart = ({ data }: IProps) => {
     <>
       <svg width='100%' height={height}>
         <Group top={margin.top} left={margin.left} height={yMax}>
-          {data.map(d => {
-            const barWidth = xScale.bandwidth();
-            const barHeight = yMax - (yScale(d.amount) ?? 0);
+          {
+            data.map(d => {
+              const barWidth = xScale.bandwidth();
+              const barHeight = yMax - (yScale(d.amount) ?? 0)
 
-            const barX = xScale(d.date) || 0;
-            const barY = yMax - barHeight;
+              const barX = xScale(d.date) || 0;
+              const barY = yMax - barHeight;
 
-            return (
-              <Bar
-                key={`bar-${d.id}`}
-                x={barX}
-                y={barY}
-                width={barWidth}
-                height={barHeight}
-                rx={4}
-                fill="rgba(23, 233, 217, .5)"
-                onMouseLeave={() => {
-                  tooltipTimeout = window.setTimeout(() => {
-                    hideTooltip();
-                  }, 300);
-                }}
+              return (
+                <Bar
+                  key={`bar-${d.id}`}
+                  x={barX}
+                  y={barY}
+                  width={barWidth}
+                  height={barHeight}
+                  rx={4}
+                  fill="rgba(23, 233, 217, .5)"
+                  onMouseLeave={() => {
+                    savingTooltipTimeout = window.setTimeout(() => {
+                      hideTooltip();
+                    }, 300);
+                  }}
 
-                onMouseMove={() => {
-                  if (tooltipTimeout) clearTimeout(tooltipTimeout);
-                  const top = yMax
-                  const left = barX + barWidth + margin.left
+                  onMouseMove={() => {
+                    if (savingTooltipTimeout) clearTimeout(savingTooltipTimeout);
+                    const top = yMax
+                    const left = barX + barWidth + margin.left
 
-                  showTooltip({
-                    tooltipData: d,
-                    tooltipTop: top,
-                    tooltipLeft: left
-                  });
-                }}
-              />
-            )
-          })}
-
+                    showTooltip({
+                      tooltipData: d,
+                      tooltipTop: top,
+                      tooltipLeft: left
+                    });
+                  }}
+                />
+              )
+            })
+          }
         </Group>
       </svg>
 

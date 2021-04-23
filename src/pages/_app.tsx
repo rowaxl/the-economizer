@@ -22,6 +22,7 @@ const AppWrap = ({ Component, pageProps }: AppProps) => {
         <title>The Economizer</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <link rel="shortcut icon" href="favicon.svg" type="image/x-icon"/>k
       </Head>
 
       <Provider store={store}>

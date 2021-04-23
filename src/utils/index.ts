@@ -1,3 +1,4 @@
+import { internet } from 'faker'
 import jwt from 'jsonwebtoken'
 import { IUser } from '../store/reducers/auth'
 import { IRecord } from '../store/reducers/plans'
@@ -24,4 +25,32 @@ export const calcPercentage = (records: IRecord[]) => {
   // const percentage = isNaN(diff / (incomeAmount - expenceAmount)) ? 0 : diff / (incomeAmount - expenceAmount)
 
   return [diff]
+}
+
+export const CATEGORIES = [
+  { label: 'Housing', icon: '🏠' },
+  { label: 'Transportation', icon: '🚌' },
+  { label: 'Grocery', icon: '🍖' },
+  { label: 'Utilities', icon: '📐' },
+  { label: 'Medical & Healthcare', icon: '🏥' },
+  { label: 'Tax & Insurance', icon: '📜' },
+  { label: 'Saving', icon: '💰' },
+  { label: 'Education', icon: '📚' },
+  { label: 'Entertainment', icon: '🏀' },
+  { label: 'Income', icon: '💵' },
+  { label: 'Uncategorised', icon: '❓' },
+]
+
+export const CATEGORY_COLOR_MAP = {
+  'Housing': internet.color(),
+  'Transportation': internet.color(),
+  'Grocery': internet.color(),
+  'Utilities': internet.color(),
+  'Medical & Healthcare': internet.color(),
+  'Tax & Insurance': internet.color(),
+  'Saving': internet.color(),
+  'Education': internet.color(),
+  'Entertainment': internet.color(),
+  'Income': internet.color(),
+  'Uncategorised': internet.color(),
 }

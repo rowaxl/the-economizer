@@ -1,17 +1,18 @@
-import React from 'react';
-import { Group } from '@visx/group';
-import { LinePath } from '@visx/shape';
-import { scaleBand, scaleLinear } from '@visx/scale';
-import { extent, max } from 'd3-array';
-
-const lineCount = 12;
+import React from 'react'
+import {
+  Axis,
+  Grid,
+  AnimatedLineSeries,
+  XYChart,
+  Tooltip,
+} from "@visx/xychart"
 
 interface IRecord {
   date: string
   amount: number
 }
 
-type Props = {
+type Props = {  
   data: IRecord[]
 }
 
@@ -23,36 +24,29 @@ const getX = (d: IRecord) => d.date;
 const getY = (d: IRecord) => d.amount;
 
 
-const Lines = ({ data }: Props) => {
-  // bounds
-  const lineHeight = 500 / lineCount;
-
-  // scales
-  const xScale = scaleBand<string>({
-    domain: extent(data, getX) as [string, string],
-  });
-  const yScale = scaleLinear<number>({
-    domain: [0, max(data, getY) as number],
-  });
-
-  // update scales
-  xScale.range([0, width]);
-  yScale.range([lineHeight, 0]);
+const LineCharts = ({ data }: Props) => {
 
   return (
-    <svg width={width} height={height}>
-      <Group top={lineHeight}>
-        <LinePath
-          data={data}
-          x={d => xScale(getX(d as IRecord)) ?? 0}
-          y={d => yScale(getY(d as IRecord)) ?? 0}
-          stroke="#ffffff"
-          strokeWidth={2}
-          shapeRendering="geometricPrecision"
-        />
-        </Group>
-    </svg>
+    <XYChart width={width} height={height} xScale={{ type: "band" }} yScale={{ type: "linear" }}>
+      <Axis orientation="bottom" />
+      <Axis orientation="left" />
+      <Grid columns={false} />
+      <AnimatedLineSeries dataKey="date" data={data} xAccessor={getX} yAccessor={getY} />
+      <Tooltip
+        snapTooltipToDatumX
+        snapTooltipToDatumY
+        showVerticalCrosshair
+        showSeriesGlyphs
+        renderTooltip={({ tooltipData }) => (
+          <div>
+            {getX((tooltipData as any).nearestDatum.datum)}
+            {": "}
+            {getY(((tooltipData as any)).nearestDatum.datum) > 0 ? '$' + getY(((tooltipData as any)).nearestDatum.datum) : '-$' + Math.abs(getY(((tooltipData as any)).nearestDatum.datum))}
+          </div>
+        )}
+      />
+    </XYChart>
   );
 };
 
-export default Lines;
+export default LineCharts;

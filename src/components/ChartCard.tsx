@@ -1,14 +1,17 @@
+import DateAmountChart from './DateAmountBarChart'
+import LineChart from './LineChart'
 
-import DateAmountChart from './DateAmountBarChart';
+import { IChartData } from '../pages/dashboard'
+import PieChart from './PieChart'
 
 interface IProps {
   type: string
-  data: { id: string, date: string, amount: number, category: string }[]
+  data: IChartData[]
 }
 
 const TITLES = {
   'savings': 'Saving Balance: $',
-  'leftovers': 'Left Over Transitions',
+  'leftOver': 'Left Over Transitions',
   'categories': 'Expense Categories',
 }
 
@@ -29,13 +32,17 @@ const ChartCard = ({
   const renderChart = () => {
     if (type === 'savings') {
       return <DateAmountChart data={data} />
-    } else if (type === '')
+    } else if (type === 'leftOver') {
+      return <LineChart data={data} />
+    } else if (type === 'categories') {
+      return <PieChart data={data} animate={true} />
+    }
 
     return <></>
   }
 
   return (
-    <div className="tw-w-1/3 tw-h-full tw-px-2">
+    <div className="tw-w-1/3 tw-h-full tw-px-2" style={{ minWidth: 500 }}>
       {
         data.length > 0 &&
         <>

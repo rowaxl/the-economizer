@@ -28,10 +28,10 @@ const tooltipStyles = {
 
 // bounds
 const width = 500;
-const height = 500;
-const margin = { top: 10, bottom: 10, left: 0, right: 0 };
-const xMax = width;
-const yMax = height - margin.top - margin.bottom;
+const height = 500
+const margin = { top: 10, bottom: 10, left: 0, right: 0 }
+const xMax = width
+const yMax = height - margin.top - margin.bottom
 
 let savingTooltipTimeout: number
 

@@ -2,7 +2,7 @@ import { useState, useEffect, ChangeEvent } from 'react'
 import moment, { Moment } from 'moment'
 import DateRangePicker from 'react-daterange-picker'
 import { IRecord } from '../store/reducers/plans'
-
+import { CATEGORIES } from '../utils'
 export interface IRcordFormData {
   category: string
   amount: number
@@ -15,20 +15,6 @@ interface IModalProps {
   handleClose: () => void
   onSubmit: (formData: IRcordFormData) => void
 }
-
-export const CATEGORIES = [
-  { label: 'Housing', icon: '🏠' },
-  { label: 'Transportation', icon: '🚌' },
-  { label: 'Grocery', icon: '🍖' },
-  { label: 'Utilities', icon: '📐' },
-  { label: 'Medical & Healthcare', icon: '🏥' },
-  { label: 'Tax & Insurance', icon: '📜' },
-  { label: 'Saving', icon: '💰' },
-  { label: 'Education', icon: '📚' },
-  { label: 'Entertainment', icon: '🏀' },
-  { label: 'Income', icon: '💵' },
-  { label: 'Uncategorised', icon: '❓' },
-]
 
 const RecordModal = ({ open, data, onSubmit, handleClose }: IModalProps) => {
   const today = moment()

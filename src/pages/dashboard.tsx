@@ -12,6 +12,7 @@ import { calcPercentage } from '../utils'
 import { updateLocation } from '../store/reducers/location'
 import { fetchPlansAction, addPlanAction } from '../store/reducers/plans'
 import moment from 'moment'
+import { PieRecord } from '../components/PieChart'
 
 export interface IChartData {
   id: string
@@ -27,6 +28,7 @@ const DashboardPage = () => {
   const [openModal, setOpenModal] = useState(false)
   const [savingsChartData, setSavingsChartData] = useState<IChartData[]>([])
   const [leftOverChartData, setLeftOverChartData] = useState<IChartData[]>([])
+  const [categoryChartData, setCategoryChartData] = useState<IChartData[]>([])
 
   const renderLatestPlans = () => {
     if (!plans.plans)
@@ -78,15 +80,17 @@ const DashboardPage = () => {
 
   useEffect(() => {
     if (plans.plans && plans.plans.length > 0) {
-      const savingsData = plans.plans.map(p => {
+      const records: IChartData[] = plans.plans.map(p => {
         return p.records.map(r => ({
           id: r.id,
           date: new Date(r.date).toDateString(),
           amount: Math.abs(r.amount),
           category: r.category
         }))
-      })
-        .flat()
+      }).flat()
+
+      // calculate saving amount from plans
+      const savingsData = records
         .filter(d => d.category === 'Saving')
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
       
@@ -95,14 +99,34 @@ const DashboardPage = () => {
         amount: savingsData.slice(0, i).reduce((a, c) => a + c.amount, d.amount)
       })))
 
-      const leftOvers = plans.plans.map(p => ({
-        id: p.title,
-        date: new Date(p.end).toDateString(),
-        amount: p.records.reduce((a, c) => a + c.amount, 0),
-        category: ''
-      }))
+      // calculate leftover amount of plans
+      const leftOvers = plans.plans
+        .sort((a, b) => new Date(a.end * 1000).getTime() - new Date(b.end * 1000).getTime())
+        .map(p => ({
+          id: p.title,
+          date: new Date(p.end * 1000).toDateString(),
+          amount: p.records.reduce((a, c) => a + c.amount, 0),
+          category: ''
+        }))
 
       setLeftOverChartData(leftOvers)
+
+      // calculate sums by categories
+      const categoryData = records
+        .filter(r => r.category !== 'Income')
+        .reduce((a, c) => {
+          const aIndex = a.findIndex((record: IChartData) => record.category === c.category)
+
+          if (aIndex > -1) {
+            a[aIndex].amount += Math.abs(c.amount)
+          } else {
+            a.push({ ...c, amount: Math.abs(c.amount) })
+          }
+
+          return a
+        }, [] as IChartData[])
+
+      setCategoryChartData(categoryData)
     }
 
   }, [plans.plans])
@@ -127,9 +151,10 @@ const DashboardPage = () => {
 
   return (
     <div>
-      <div className="tw-w-full tw-flex tw-flex-row tw-flex-wrap tw-justify-start">
+      <div className="tw-w-full tw-flex tw-flex-row tw-flex-wrap tw-justify-start tw-overflow-x-auto">
         <ChartCard type={'savings'} data={savingsChartData} />
-        <ChartCard type={'recent'} data={leftOverChartData} />
+        <ChartCard type={'leftOver'} data={leftOverChartData} />
+        <ChartCard type={'categories'} data={categoryChartData} />
       </div>
 
       <CardDeck

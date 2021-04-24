@@ -16,3 +16,4 @@ Plan Detail
 ### Functions 
 Add new budget plan
 Add / Edit / Delete detail of your expense / income record
+This generate Charts of your savings, left over of plan, and expence categories.

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import moment from 'moment'
-import { CATEGORIES } from './RecordModal'
+import { CATEGORIES } from '../utils'
 
 interface IRecordProps {
   id: string

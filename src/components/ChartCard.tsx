@@ -42,7 +42,7 @@ const ChartCard = ({
   }
 
   return (
-    <div className="tw-w-1/3 tw-h-full tw-px-2" style={{ minWidth: 500 }}>
+    <div className="tw-w-1/3 tw-h-full tw-px-2 tw-mt-4" style={{ minWidth: 500 }}>
       {
         data.length > 0 &&
         <>

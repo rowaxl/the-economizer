@@ -7,7 +7,7 @@ interface IDeckProps {
 }
 
 const CardDeck = ({ deckTitle, cards, wrap = true }: IDeckProps) => {
-  const deckClasses = wrap ? 'tw-w-full tw-flex tw-flex-row tw-flex-wrap tw-justify-start' : 'tw-w-full tw-flex tw-flex-row tw-justify-start'
+  const deckClasses = wrap ? 'tw-w-full tw-flex tw-flex-row tw-flex-wrap tw-justify-start' : 'tw-w-full tw-flex tw-flex-row tw-justify-start tw-flex-wrap lg:tw-flex-nowrap'
 
   return (
     <div className='tw-flex tw-flex-col tw-min-h-1/2 tw-mt-4'>

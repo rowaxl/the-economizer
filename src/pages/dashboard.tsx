@@ -78,7 +78,7 @@ const DashboardPage = () => {
     })
 
     if (latestPlans.length >= 3) {
-      latestPlans.push(<ViewAllButton />)
+      latestPlans.push(<ViewAllButton key="view-all-button" />)
     }
 
     return latestPlans
@@ -182,7 +182,7 @@ const DashboardPage = () => {
 
   return (
     <div>
-      <div className="tw-w-full tw-flex tw-flex-row tw-flex-wrap tw-justify-start tw-overflow-x-auto">
+      <div className="tw-w-full tw-mt-4 tw-flex tw-flex-row tw-flex-wrap tw-justify-center lg:tw-justify-start lg:tw-overflow-x-auto lg:tw-flex-nowrap tw-overflow-auto">
         <ChartCard type={'savings'} data={savingsChartData} />
         <ChartCard type={'leftOver'} data={leftOverChartData} />
         <ChartCard type={'categories'} data={categoryChartData} />
@@ -199,7 +199,7 @@ const DashboardPage = () => {
         className="tw-fixed tw-bottom-20 tw-right-12 tw-border tw-rounded-md tw-px-4 tw-py-2 tw-transition tw-duration-500 tw-ease tw-select-none tw-text-white tw-bg-indigo-600 tw-border-indigo-500 hover:tw-text-indigo-200 hover:tw-bg-transparent focus:tw-outline-none focus:tw-shadow-outline"
         onClick={handleOpenModal}
       >
-        Add New Plan
+        New Plan
       </button>
 
       <CreatePlanModal

@@ -118,6 +118,10 @@ const DashboardPage = () => {
     }))
   }
 
+  const handleReturnToDashboard = () => {
+    router.push('/dashboard')
+  }
+
   return (
     <div>
       <CardDeck
@@ -128,10 +132,18 @@ const DashboardPage = () => {
 
       <button
         type="button"
-        className="tw-fixed tw-bottom-20 tw-right-12 tw-border tw-rounded-md tw-px-4 tw-py-2 tw-transition tw-duration-500 tw-ease tw-select-none tw-text-white tw-bg-indigo-600 tw-border-indigo-500 hover:tw-text-indigo-200 hover:tw-bg-transparent focus:tw-outline-none focus:tw-shadow-outline"
+        className="tw-fixed tw-bottom-20 tw-right-24 tw-border tw-rounded-md tw-px-4 tw-py-2 tw-transition tw-duration-500 tw-ease tw-select-none tw-text-white tw-bg-indigo-600 tw-border-indigo-500 hover:tw-text-indigo-200 hover:tw-bg-transparent focus:tw-outline-none focus:tw-shadow-outline"
         onClick={handleOpenModal}
       >
-        Add New Plan
+        New Plan
+      </button>
+
+      <button
+        type="button"
+        className="tw-fixed tw-bottom-20 tw-right-4 tw-border tw-rounded-md tw-px-4 tw-py-2 tw-transition tw-duration-500 tw-ease tw-select-none tw-text-white tw-bg-gray-600 tw-border-gray-500 hover:tw-text-indigo-200 hover:tw-bg-transparent focus:tw-outline-none focus:tw-shadow-outline"
+        onClick={handleReturnToDashboard}
+      >
+        Return
       </button>
 
       <CreatePlanModal

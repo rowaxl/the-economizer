@@ -6,13 +6,14 @@ import PlanCard from '../components/PlanCard'
 import CardDeck from '../components/CardDeck'
 import ChartCard from '../components/ChartCard'
 import CreatePlanModal, { IFormData } from '../components/CreatePlanModal'
+import DeletePlanModal from '../components/DeletePlanModal'
 import { ICombinedStates } from '../store/reducers'
 
 import { calcPercentage } from '../utils'
 import { updateLocation } from '../store/reducers/location'
-import { fetchPlansAction, addPlanAction } from '../store/reducers/plans'
+import { fetchPlansAction, addPlanAction, IPlan, deletePlanAction } from '../store/reducers/plans'
 import moment from 'moment'
-import { PieRecord } from '../components/PieChart'
+import ViewAllButton from '../components/ViewAllButton'
 
 export interface IChartData {
   id: string
@@ -26,9 +27,20 @@ const DashboardPage = () => {
   const dispatch = useDispatch()
   const { plans, auth } = useSelector((state: ICombinedStates) => state)
   const [openModal, setOpenModal] = useState(false)
+  const [openDeleteModal, setOpenDeleteModal] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState<IPlan>()
   const [savingsChartData, setSavingsChartData] = useState<IChartData[]>([])
   const [leftOverChartData, setLeftOverChartData] = useState<IChartData[]>([])
   const [categoryChartData, setCategoryChartData] = useState<IChartData[]>([])
+
+  const onDeletePlan = (id: string) => {
+    const deleteTarget = plans.plans?.find(p => p._id === id)
+
+    if (!deleteTarget) return
+
+    setDeleteTarget(deleteTarget)
+    setOpenDeleteModal(true)
+  }
 
   const renderLatestPlans = () => {
     if (!plans.plans)
@@ -45,13 +57,13 @@ const DashboardPage = () => {
         </div>
       )
 
-    return plans.plans.sort((a, b) => a.end < b.end ? 1 : -1 ).slice(0, 3).map(plan => {
+    const latestPlans = plans.plans.sort((a, b) => a.end < b.end ? 1 : -1 ).slice(0, 3).map(plan => {
       const [diff] = calcPercentage(plan.records)
 
       return (
         <div
           key={plan._id}
-          className='tw-w-1/3'
+          className='tw-w-full'
         >
           <PlanCard
             id={plan._id}
@@ -59,9 +71,17 @@ const DashboardPage = () => {
             startDate={moment(plan.start * 1000)}
             endDate={moment(plan.end * 1000)}
             diff={diff}
+            deletePlan={onDeletePlan}
           />
         </div>
-    )})
+      )
+    })
+
+    if (latestPlans.length >= 3) {
+      latestPlans.push(<ViewAllButton />)
+    }
+
+    return latestPlans
   }
 
   useEffect(() => {
@@ -139,6 +159,11 @@ const DashboardPage = () => {
     setOpenModal(false)
   }
 
+  const handleCloseDeleteModal = () => {
+    setOpenDeleteModal(false)
+    setDeleteTarget(undefined)
+  }
+
   const handleSubmit = (data: IFormData) => {
     if (!auth.user) return
 
@@ -147,6 +172,12 @@ const DashboardPage = () => {
       start: data.start.unix(),
       end: data.end.unix()
     }))
+  }
+
+  const handleDeletePlan = (id: string) => {
+    if (!auth.user) return
+
+    dispatch(deletePlanAction(id, auth.user))
   }
 
   return (
@@ -160,6 +191,7 @@ const DashboardPage = () => {
       <CardDeck
         deckTitle="Latest Plans"
         cards={renderLatestPlans()}
+        wrap={false}
       />
 
       <button
@@ -174,6 +206,13 @@ const DashboardPage = () => {
         open={openModal}
         handleClose={handleCloseModal}
         onSubmit={handleSubmit}
+      />
+
+      <DeletePlanModal
+        open={openDeleteModal}
+        planData={deleteTarget}
+        handleClose={handleCloseDeleteModal}
+        onSubmit={handleDeletePlan}
       />
     </div>
   )

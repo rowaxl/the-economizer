@@ -44,3 +44,16 @@ export const updatePlan = async (token: string, plan: IPlan) => {
 
   return await res.json()
 }
+
+export const deletePlan = async (token: string, planID: string) => {
+  const res = await fetch(ENDPOINT + `/${planID}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'access-token': token
+    }
+  })
+
+  return res.ok
+}

@@ -1,4 +1,5 @@
 interface IButtonProps {
+  className?: string
   text: string
   variant: string
   onClick: any
@@ -19,12 +20,14 @@ const buttonColor = (variant: string) => {
   }
 }
 
-const Button = ({ text, variant, onClick }: IButtonProps) => {
+const Button = ({ className, text, variant, onClick }: IButtonProps) => {
   const color = buttonColor(variant)
+
+  const buttonClassName = 'tw-border tw-text-white tw-rounded-md tw-px-4 tw-py-2 transition ease select-none tw-w-full ' + color + `${className ? className : ''}`
 
   return (
     <button
-      className={`tw-border tw-text-white tw-rounded-md tw-px-4 tw-py-2 transition ease select-none tw-w-full ` + color}
+      className={buttonClassName}
       onClick={onClick}
     >
       {text}

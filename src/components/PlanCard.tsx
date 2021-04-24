@@ -11,9 +11,10 @@ interface IProps {
   diff: number
   startDate: Moment
   endDate: Moment
+  deletePlan: (id: string) => void
 }
 
-const PlanCard = ({ id, title, diff, startDate, endDate }: IProps) => {
+const PlanCard = ({ id, title, diff, startDate, endDate, deletePlan }: IProps) => {
   const router = useRouter()
 
   const renderLeftOver = () => {
@@ -53,7 +54,11 @@ const PlanCard = ({ id, title, diff, startDate, endDate }: IProps) => {
   }
 
   const handleOnClickDetail = () => {
-    router.push('plan/' + id)
+    router.push('/plans/' + id)
+  }
+
+  const handleDeletePlan = () => {
+    if (id) deletePlan(id)
   }
 
   return (
@@ -71,6 +76,14 @@ const PlanCard = ({ id, title, diff, startDate, endDate }: IProps) => {
       <div className='tw-flex tw-flex-row tw-my-4'>
         {renderLeftDay()}
       </div>
+
+      <button
+        type="button"
+        className="tw-absolute tw--top-12 tw-right-1 tw-border tw-rounded-md tw-px-4 tw-py-2 tw-transition tw-duration-500 tw-ease tw-select-none tw-text-white tw-border-red-500 focus:tw-border-red-600 tw-bg-red-500 focus:tw-bg-red-600 hover:tw-bg-red-400 focus:tw-outline-none focus:tw-shadow-outline"
+        onClick={handleDeletePlan}
+      >
+        X
+      </button>
 
       <Button
         variant="primary"

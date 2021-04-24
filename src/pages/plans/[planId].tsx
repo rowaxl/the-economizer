@@ -24,7 +24,7 @@ const PlanDetail = () => {
 
   useEffect(() => {
     if (planDetail)
-      dispatch(updateLocation({ path: '/plan', title: planDetail.title }))
+      dispatch(updateLocation({ path: '/plans', title: planDetail.title }))
   }, [planDetail])
 
   useEffect(() => {

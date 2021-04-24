@@ -5,7 +5,6 @@ module.exports = {
   prefix: "tw-",
   important: false,
   theme: {
-    screens: { sm: "640px" },
     fontSize: {
       'xs': '.75rem',
       'sm': '.875rem',
